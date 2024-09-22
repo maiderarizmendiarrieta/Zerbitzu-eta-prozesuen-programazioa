@@ -1,7 +1,7 @@
 package model;
 
 public interface IMekanikaria {
-    void autoaKonpondu();
+    void autoaKonpondu() throws MekanikariaException;
     int kobratu();
     void biharEtorri();
 }
