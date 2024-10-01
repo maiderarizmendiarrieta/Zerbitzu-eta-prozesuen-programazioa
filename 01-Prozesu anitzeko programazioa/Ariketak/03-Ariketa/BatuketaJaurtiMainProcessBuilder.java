@@ -1,9 +1,9 @@
 import java.io.IOException;
 
-public class BatuketaJaurtiMain {
+public class BatuketaJaurtiMainProcessBuilder {
     public static void main(String[] args) {
         ProcessBuilder pb;
-        pb = new ProcessBuilder("java.exe", "bin\\Batuketa", "76", "2");
+        pb = new ProcessBuilder("java.exe", "unieibar.Batuketa", "76", "2");
         System.out.println("BatuketaJaurtiMain: BatuketaMain prozesua SORTU dut.");
 
         try {
@@ -16,5 +16,5 @@ public class BatuketaJaurtiMain {
             e.printStackTrace();
         }
         System.out.println("BatuketaJaurtiMain: Banoa lotara.");
-    }   
+    }
 }
