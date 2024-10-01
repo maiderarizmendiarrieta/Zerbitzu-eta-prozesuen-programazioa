@@ -1,20 +1,33 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class BatuketaJaurtiMainProcessBuilder {
     public static void main(String[] args) {
-        ProcessBuilder pb;
-        pb = new ProcessBuilder("java.exe", "unieibar.Batuketa", "76", "2");
-        System.out.println("BatuketaJaurtiMain: BatuketaMain prozesua SORTU dut.");
+        ProcessBuilder pb = new ProcessBuilder("java.exe", "unieibar.Batuketa", "76", "2");
+        System.out.println("BatuketaJaurtiMainProcessBuilder: BatuketaMain prozesua SORTU dut.");
 
         try {
             Process p = pb.start();
-            System.out.println("BatuketaJaurtiMain: BatuketaMain prozesua JAURTI dut.");
+            System.out.println("BatuketaJaurtiMainProcessBuilder: BatuketaMain prozesua JAURTI dut.");
+            
+            // Prozesuaren irtera irakurtzeko
+            InputStream in = p.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String lerroa;
+
+            while ((lerroa = reader.readLine()) != null) {
+                System.out.println("BatuketaJaurtiMainProcessBuilder: Semeak esan du: " + lerroa);
+            }
+
+            // Prozesua bukatu arte itxaron
             p.waitFor();
-            System.out.println("BatuketaJAurtiMain: BatuketaMain prozesua AMAITU da.");
+            System.out.println("BatuketaJaurtiMainProcessBuilder: BatuketaMain prozesua AMAITU da.");
         
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("BatuketaJaurtiMain: Banoa lotara.");
+        System.out.println("BatuketaJaurtiMainProcessBuilder: Banoa lotara.");
     }
 }
