@@ -7,7 +7,7 @@ import java.util.List;
 
 public class SvchostMain {
     public static void main(String[] args) {
-        
+        String[] agindua = {"CMD /C TASKLIST /SVC | find / svchos.exe"};
         ProcessBuilder pb = new ProcessBuilder();
         pb.command("cmd.exe", "tasklist /svc | findstr svchost.exe");
 

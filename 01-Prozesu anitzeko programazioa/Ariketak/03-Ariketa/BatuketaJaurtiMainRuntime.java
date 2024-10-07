@@ -20,6 +20,7 @@ public class BatuketaJaurtiMainRuntime {
 
             // Prozesua bukatu arte itxaron
             p.waitFor();
+            reader.close();
             System.out.println("BatuketaJaurtiMainRuntime: batuketa prozesua BUKATU da.");
         
         } catch (Exception e) {
