@@ -7,36 +7,37 @@ public class ZorizJaurti {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         try {
-            ProcessBuilder pb = new ProcessBuilder("java", "Zoriz");
+            ProcessBuilder pb = new ProcessBuilder("java.exe", "Zoriz");
             Process p = pb.start();
 
             // Prozesuaren sarrera eta irtera
-            InputStream pIrtera = p.getInputStream();
-            OutputStream pSrrera = p.getOutputStream();
-            Scanner pScanner = new Scanner(pIrtera);
+            InputStream stdin = p.getInputStream();
+            OutputStream stdout = p.getOutputStream();
+            Scanner pScanner = new Scanner(stdin);
+            
             while (true) {
-                System.out.print("Sartu testu bat (buka idatzi prozesua amaitzeko): ");
                 String sarrera = in.nextLine();
             
                 // Testua semeari bidali
-                pSrrera.write((sarrera + "\n").getBytes());
-                pSrrera.flush(); // testua bialtzen dala ziurtatzeko
+                stdout.write((sarrera + "\n").getBytes());
+                stdout.flush(); // testua bialtzen dala ziurtatzeko
 
-                if (sarrera.equalsIgnoreCase("buka")) {
+                if (sarrera.equals("buka")) {
                     break;
                 }
 
                 // Semeak bidalitako zenbakia irakurtzeko
-                if (in.hasNextLine()) {
-                    String erantzuna = pScanner.nextLine();
-                    System.out.println("Semeak sortutako zenbakia: " + erantzuna);
-                }
+                String erantzuna = pScanner.nextLine();
+                System.out.println(erantzuna);
+                
             }
-
+            pScanner.close();
             p.waitFor();
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-        } 
+        } finally {
+            in.close();
+        }
     }
 }

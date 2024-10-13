@@ -12,5 +12,6 @@ public class Zoriz {
             }
             System.out.println((int) (Math.random() * 11));
         }
+        in.close();
     }
 }
