@@ -1,25 +1,26 @@
-import java.util.Random;
-public class Ikaslea2 extends Thread {
+public class Ikaslea extends Thread {
         String agurrak[] = { "kaixo!", "eup!", "zelan?", "eeeepa!", "faktos!" };
         int zenbatAldiz = 5;
         String izena;
         private volatile boolean hitlzekoEskaera = false;
+        private Object monitorea;
 
-        public Ikaslea2(String izena, int zenbatAldiz) {
+        public Ikaslea(String izena, int zenbatAldiz, Object monitorea) {
             this.izena = izena;
             this.zenbatAldiz = zenbatAldiz;
+            this.monitorea = monitorea;
         }
 
         public void run() {
-            // Auzazko kodea exekutatu "zenbatAldiz" aldiz
-            //Random ausaz = new Random();
-            long denb = (long) (Math.random()*5);
-            for (int i = 0; i < agurrak.length; i++) {
-                if (!hitlzekoEskaera) {
-                    System.out.println("Nire izena " + izena + " da: " + agurrak[i] + " " + (i+1) );
+            synchronized (monitorea) {
+                for (int i = 0; i < agurrak.length; i++) {
+                    if (!hitlzekoEskaera) {
+                        System.out.println("Nire izena " + izena + " da: " + agurrak[i % agurrak.length] + " " + (i+1));
                     try {
-                        Thread.sleep(denb);
-                    } catch (Exception e) {
+                        Thread.sleep((long) (Math.random() * 1000)); // Denbora auzaz
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -43,9 +44,11 @@ public class Ikaslea2 extends Thread {
             this.izena = izena;
         }
 
-        public void jarriZenbatAldiz(int zenb) extends Thread {
-            if (10>=zenb) {
-                
+        public void jarriZenbatAldiz(int zenb) {
+            if (zenb >= 5 && zenb <= 10) {
+                this.zenbatAldiz = zenb;
+            } else {
+                System.out.println("Zenbaki okerra: Ezarri 5 eta 10 arteko balio bat.");
             }
         }
 

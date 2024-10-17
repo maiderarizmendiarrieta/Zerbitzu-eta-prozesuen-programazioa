@@ -1,37 +1,35 @@
 import java.util.*;
 
-public class Gela2 {
+public class Gela {
     public static void main(String[] args) {
-        ArrayList<Ikaslea2> ikasleak = new ArrayList<>();
+        ArrayList<Ikaslea> ikasleak = new ArrayList<>();
         String ikasleIzena[] = {"Oihane", "Itoitz", "Julen", "Maddi", "Irai", "Jon", "Aritz", "Unax", "Nahia", "Elene"};
-        Ikaslea2 ikaslea = null;
-        Irakaslea2 irakaslea = null;
+        Ikaslea ikaslea = null;
+        Irakaslea irakaslea = null;
         Random ausaz = new Random();
         Object monitorea = new Object();
         
 
+        // Ikasleak sortu eta exekutatu
         for (int i = 0; i < ikasleIzena.length; i++) {
-            ikaslea = new Ikaslea2(ikasleIzena[i], i);
+            ikaslea = new Ikaslea(ikasleIzena[i], 5 + ausaz.nextInt(5), monitorea);
             ikasleak.add(ikaslea);
-            try {
-                ikaslea.jarriZenbatAldiz(5+ausaz.nextInt(5));
-            } catch (Exception e) {    
-            }
-            ikasleak.add(ikaslea);
+            ikaslea.start();
         }
 
-        for (int i = 0; i < ikasleak.size(); i++) {
-            ikasleak.get(i).start();
-        }
-
-        irakaslea = new Irakaslea2(monitorea);
+        // Irakaslea sortu eta exekutatu
+        irakaslea = new Irakaslea(monitorea);
         irakaslea.setIzena("Aitor");
         irakaslea.start();
         
-        // try {
-        //     Thread.sleep(2000);
-        // } catch (Exception e) {
-        // }
+        // Ikasleen hariak amaitu arte itxaron
+        for (Ikaslea ikasle : ikasleak) {
+            try {
+                ikasle.join(); // Ikasle bakoitza amaitu arte itxaron
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         synchronized (monitorea) {
             monitorea.notify();
