@@ -4,9 +4,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 public class Kalkulagailua {
-    public static void main(String[] args) {
-        
-        
+    public static void main(String[] args) {        
         try {
             // Prozesua sortu
             Process p = new ProcessBuilder("calc.exe").start();
