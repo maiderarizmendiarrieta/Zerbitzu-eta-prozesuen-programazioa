@@ -28,9 +28,9 @@ public class ZerbitzariaTCP {
             in = new ObjectInputStream(bezeroSocket.getInputStream());
             out = new ObjectOutputStream(bezeroSocket.getOutputStream());
 
-            // Ikaslea jaso eat id-a esleitu
+            // Ikaslea jaso eta id-a esleitu
             Ikaslea ikaslea = (Ikaslea) in.readObject();
-            int idBerria = (int) (Math.random() * 1000); // id berria esleitu
+            int idBerria = (int) (Math.random() * 1000.0); // id berria esleitu
             ikaslea.setId(idBerria);
 
             // Ikaslea bidali bezeroari

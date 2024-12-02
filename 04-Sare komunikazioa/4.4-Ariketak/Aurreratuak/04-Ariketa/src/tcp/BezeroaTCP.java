@@ -21,13 +21,14 @@ public class BezeroaTCP {
             socket = new Socket(zerbitzariHelbidea, zerbitzariPortua);
 
             // Bezeroarekin komunikatzeko fluxuak
-            in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
 
             // Ikaslea sortu eta bidali
             Ikaslea ikaslea = new Ikaslea("Jon", 17, 2.5f);
-            out.writeObject(ikaslea);
             System.out.println("Ikaslea bidali da: " + ikaslea);
+
+            out.writeObject(ikaslea);
 
             // Zerbitzariaren erantzuna jaso
             Ikaslea erantzuna = (Ikaslea) in.readObject();
