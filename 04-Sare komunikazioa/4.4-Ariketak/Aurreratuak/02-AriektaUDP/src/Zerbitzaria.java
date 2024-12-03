@@ -16,15 +16,15 @@ public class Zerbitzaria {
 
             while (true) {
                 // Bezeroaren mezua jaso
-                DatagramPacket receivPacket = new DatagramPacket(buffer, buffer.length);
-                socket.receive(receivPacket);
+                DatagramPacket receivedPacket = new DatagramPacket(buffer, buffer.length);
+                socket.receive(receivedPacket);
 
                 // Bezeroaren helbidea eta portua
-                InetAddress bezeroHelbidea = receivPacket.getAddress();
-                int bezeroPortua = receivPacket.getPort();
+                InetAddress bezeroHelbidea = receivedPacket.getAddress();
+                int bezeroPortua = receivedPacket.getPort();
 
                 // Mezuaren edukia
-                int bezeroZenbakia = Integer.parseInt(new String(receivPacket.getData(), 0, receivPacket.getLength()).trim());
+                int bezeroZenbakia = Integer.parseInt(new String(receivedPacket.getData(), 0, receivedPacket.getLength()).trim());
                 System.out.println("Mezua jaso " + bezeroHelbidea + ":" + bezeroPortua + " helbidetik: " + bezeroZenbakia);
 
                 // Ausazko zenbaki bat sortu

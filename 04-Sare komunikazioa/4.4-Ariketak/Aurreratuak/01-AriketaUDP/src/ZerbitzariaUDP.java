@@ -15,15 +15,15 @@ public class ZerbitzariaUDP {
 
             while (true) {
                 // Bezeroaren mezua jaso
-                DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
-                socket.receive(receivePacket);
+                DatagramPacket receivedPacket = new DatagramPacket(buffer, buffer.length);
+                socket.receive(receivedPacket);
 
                 // Bezeroaren helbidea eta portua
-                InetAddress bezeroHelbidea = receivePacket.getAddress();
-                int bezeroPortua = receivePacket.getPort();
+                InetAddress bezeroHelbidea = receivedPacket.getAddress();
+                int bezeroPortua = receivedPacket.getPort();
 
                 // Mezuaren edukia
-                String bezeroMezua = new String(receivePacket.getData(), 0, receivePacket.getLength());
+                String bezeroMezua = new String(receivedPacket.getData(), 0, receivedPacket.getLength());
                 System.out.println("Mezua jaso " + bezeroHelbidea + ":" + bezeroPortua + " helbidetik: " + bezeroMezua);
             
                 // Erantzuna bidali
