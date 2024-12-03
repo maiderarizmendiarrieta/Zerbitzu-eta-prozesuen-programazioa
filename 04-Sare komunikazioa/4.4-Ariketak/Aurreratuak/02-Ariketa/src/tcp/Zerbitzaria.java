@@ -1,8 +1,10 @@
+package tcp;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 
 public class Zerbitzaria {
     public static void main(String[] args) {
@@ -14,42 +16,30 @@ public class Zerbitzaria {
         try {
             int portua = 12345;
             zerbitzariSocket = new ServerSocket(portua);
+            System.out.println("TCP Zerbitzaria martxan " + portua + " portuan");
 
             // Bezeroaren konexioa onartu
             bezeroSocket = zerbitzariSocket.accept();
             System.out.println("Bezeroa konektatuta: " + bezeroSocket.getInetAddress());
 
-            // Bezeroarekin komunnikatzeko fluxuak sortu
+            // Bezeroarekin komunikatzeko fluxuak sortu
             in = new DataInputStream(bezeroSocket.getInputStream());
             out = new DataOutputStream(bezeroSocket.getOutputStream());
 
-            // Bezeroari mezua bidali
-            out.writeUTF("Maider 19");
+            // Bezeroak bidalitako zenbakia jaso
+            int bezeroZenbakia = in.readInt();
+            System.out.println("Bezeroak bidalitako zenbakia: " + bezeroZenbakia);
 
-            // Bezeroak bidalitako izena eta adina jaso
-            String data = in.readUTF();
-            System.out.println("Bezeroaren mezua jasota: " + data);
-            
-            // Izena eta adina banatu
-            try {
-                String[] parts = data.split(" ");
-                String izena = parts[0];
-                int adina = Integer.parseInt(parts[1]);
+            // Ausazko zenbaki bat sortu
+            Random random = new Random();
+            int n = random.nextInt(100); // 0 - 99 bitartekoa
+            System.out.println("Ausazko zenbakia sortu da: " + n);
 
-                // Adingabea den ala ez aztertu
-                String erantzuna;
-                if (adina < 18) {
-                    erantzuna = izena + " " + adina + " urte ditu, adingabea da.";
-                } else {
-                    erantzuna = izena + " " + adina + " urte ditu, adingabea ez da.";
-                }
+            // Erantzuna bidali (bezeroari zenbakia eta ausazko zenbakia batuta)
+            int result = bezeroZenbakia + n;
+            out.writeInt(result);
+            System.out.println("Erantzuna bidali: " + result);
 
-                // Erantzuna bidali
-                out.writeUTF(erantzuna);
-
-            } catch (Exception e) {
-                out.writeUTF("Errore bat gertatu da. Mesedez, izena eta adina ondo idatzi.");
-            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

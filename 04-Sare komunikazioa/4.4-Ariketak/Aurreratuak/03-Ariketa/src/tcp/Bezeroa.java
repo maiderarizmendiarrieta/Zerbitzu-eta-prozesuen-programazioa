@@ -1,6 +1,9 @@
+package tcp;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class Bezeroa {
@@ -8,6 +11,7 @@ public class Bezeroa {
         Socket socket = null;
         DataInputStream in = null;
         DataOutputStream out = null;
+        BufferedReader userInput = null;
 
         try {
             String zerbitzariHelbidea = "127.0.0.1";
@@ -15,21 +19,27 @@ public class Bezeroa {
 
             // Socketa sortu eta zerbitzariaren helbidearekin konektatu
             socket = new Socket(zerbitzariHelbidea, zerbitzariPortua);
-            System.out.println("Zerbitzariari konektatzen...");
+            System.out.println("Zerbitzarira konektatzen...");
 
             // Bezeroarekin komunikatzeko fluxuak sortu
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
+            userInput = new BufferedReader(new InputStreamReader(System.in));
 
-            // Zenbaki bat bidali zerbitzariari
-            int bidaltzekoZenb = 10;
-            out.writeInt(bidaltzekoZenb);
-            System.out.println("Zenbakia bidali: " + bidaltzekoZenb);
+            // Zerbitzariaren mezua jaso
+            String zerbitzariMezua = in.readUTF();
+            System.out.println(zerbitzariMezua);
+
+            // Erabiltzaileari izena eta adina eskatu
+            System.out.print("Idatzi zure izena eta adina (adibidez: Jon 17): ");
+            String inputData = userInput.readLine();
+
+            // Zerbitzariari datuak bidali
+            out.writeUTF(inputData);
 
             // Zerbitzariaren erantzuna jaso
-            int erantzuna = in.readInt();
+            String erantzuna = in.readUTF();
             System.out.println("Zerbitzariaren erantzuna: " + erantzuna);
-            
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
