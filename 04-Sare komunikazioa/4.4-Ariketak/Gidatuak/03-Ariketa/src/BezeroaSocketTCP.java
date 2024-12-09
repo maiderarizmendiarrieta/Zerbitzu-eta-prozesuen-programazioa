@@ -1,31 +1,31 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
 public class BezeroaSocketTCP {
+    private static final String SERVER_ADDRESS = "127.0.0.1";
+    private static final int SERVER_PORT = 12345;
+
     public static void main(String[] args) {
-        String host = "localhost";
-        int port = 6000;
+        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in))) {
 
-        System.out.println("Socket TCP BEZEROA martxan...");
-        try (Socket bezeroa = new Socket(host, port);
-            PrintWriter pwos = new PrintWriter(bezeroa.getOutputStream(), true);
-            BufferedReader br = new BufferedReader(new InputStreamReader(bezeroa.getInputStream()));
-            BufferedReader brErabiltzailea = new BufferedReader(new InputStreamReader(System.in))) {
+            String serverResponse;
+            while ((serverResponse = in.readLine()) != null) {
+                System.out.println("ZERBITZARIA: " + serverResponse);
 
-            String erantzuna;
-            while ((erantzuna = br.readLine()) != null) {
-                System.out.println("Zerbitzaria: " + erantzuna);
-                if (erantzuna.contains("Zure aukera") || erantzuna.contains("Jarraitu nahi duzu")) {
-                    String bidali = brErabiltzailea.readLine();
-                    pwos.println(bidali);
+                if (serverResponse.startsWith("Sartu zure asmakizuna:")
+                        || serverResponse.contains("Berriro jokatu nahi duzu?")) {
+                    String input = userInput.readLine();
+                    out.println(input);
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Socket TCP BEZEROA itzalita. Agur!");
     }
 }

@@ -6,78 +6,71 @@ import java.net.Socket;
 import java.util.Random;
 
 public class HariZerbitzaria extends Thread {
-    private BufferedReader sarreraFluxua;
-    private PrintWriter irteeraFluxua;
-    private Socket socket;
-    private int hariZenbakia;
-    private int ausazkoZenbakia;
-    private static final int MAX_AUKERAK = 6;
+    private final Socket clientSocket;
 
-    public HariZerbitzaria(int hariZenbakia, Socket s) {
-        this.hariZenbakia = hariZenbakia;
-        this.socket = s;
-        this.ausazkoZenbakia = new Random().nextInt(100) + 1; // 1-100 artean
-        try {
-            sarreraFluxua = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-            irteeraFluxua = new PrintWriter(socket.getOutputStream(), true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public HariZerbitzaria(Socket socket) {
+        this.clientSocket = socket;
     }
 
     @Override
     public void run() {
-        System.out.println("HariZerbitzaria (" + this.hariZenbakia + ") bezeroarekin konektatuta: " + this.socket.toString());
-        try {
-            irteeraFluxua.println("Zenbakia asmatu behar duzu (1-100 bitartean). 6 aukera dituzu!");
-            int aukeraKopurua = 0;
-            boolean asmatu = false;
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
 
-            while (aukeraKopurua < MAX_AUKERAK && !asmatu) {
-                irteeraFluxua.print("Zure aukera: ");
-                irteeraFluxua.flush();
-                String jasotakoa = sarreraFluxua.readLine();
-                
+            int secretNumber = (int) (Math.random() * 100) + 1;
+            int attempts = 0;
+            boolean guessed = false;
+
+            out.println(
+                    "Zerbitzariari konektatuta zaude! 1etik 100era dagoen zenbaki bat asmatu beharko duzu. 6 aukera dituzu!");
+
+            while (attempts < 6) {
+                out.println("Sartu zure asmakizuna:");
+                String guessStr = in.readLine();
+
+                if (guessStr == null)
+                    break;
+
                 try {
-                    int bezeroZenbakia = Integer.parseInt(jasotakoa.trim());
-                    aukeraKopurua++;
+                    int guess = Integer.parseInt(guessStr);
+                    attempts++;
 
-                    if (bezeroZenbakia == ausazkoZenbakia) {
-                        irteeraFluxua.println("ZORIONAK! Asmatu duzu zenbakia: " + ausazkoZenbakia);
-                        asmatu = true;
-                    } else if (bezeroZenbakia < ausazkoZenbakia) {
-                        irteeraFluxua.println("Zenbaki HANDIAGOA da.");
+                    if (guess == secretNumber) {
+                        out.println("ZORIONAK! Asmatu duzu zenbakia " + secretNumber + " zen.");
+                        guessed = true;
+                        break;
+                    } else if (guess < secretNumber) {
+                        out.println("ZENBAKI HANDIAGOA da.");
                     } else {
-                        irteeraFluxua.println("Zenbaki TXIKIAGOA da.");
+                        out.println("ZENBAKI TXIKIAGOA da.");
                     }
+
+                    out.println("Geldiratu dituzun saiakerak: " + attempts + "/6");
                 } catch (NumberFormatException e) {
-                    irteeraFluxua.println("Mesedez, zenbaki baliodun bat idatzi.");
+                    out.println("Sartutakoa ez da zenbaki balioduna. Saiatu berriro.");
                 }
             }
 
-            if (!asmatu) {
-                irteeraFluxua.println("Tamalez, ez duzu asmatu. Zenbakia hau zen: " + ausazkoZenbakia);
+            if (!guessed) {
+                out.println("TAMALDUGARRIA! Saiakerak agortu dituzu. Zenbakia " + secretNumber + " zen.");
             }
 
-            irteeraFluxua.println("Jarraitu nahi duzu? (bai/ez)");
-            String erantzuna = sarreraFluxua.readLine();
-            if ("bai".equalsIgnoreCase(erantzuna.trim())) {
-                this.ausazkoZenbakia = new Random().nextInt(100) + 1; // Zenbaki berria
-                run(); // Jokoa berriro hasi
+            out.println("Berriro jokatu nahi duzu? (BAI/EZ)");
+            String response = in.readLine();
+            if ("BAI".equalsIgnoreCase(response)) {
+                run(); // Berriro hasten du jokoa
             } else {
-                irteeraFluxua.println("Agur!");
+                out.println("Agur eta eskerrik asko jolasteagatik!");
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
-                sarreraFluxua.close();
-                irteeraFluxua.close();
-                socket.close();
+                clientSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("HariZerbitzaria (" + this.hariZenbakia + ") itxi da.");
         }
     }
+
 }
