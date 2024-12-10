@@ -6,7 +6,6 @@ import java.util.concurrent.Executors;
 
 public class ZerbitzariaSocketTCP {
     private static final int PORT = 12345;
-    private static final int MAX_ATTEMPTS = 6;
     private static final ExecutorService threadPool = Executors.newFixedThreadPool(10);
 
     public static void main(String[] args) {
