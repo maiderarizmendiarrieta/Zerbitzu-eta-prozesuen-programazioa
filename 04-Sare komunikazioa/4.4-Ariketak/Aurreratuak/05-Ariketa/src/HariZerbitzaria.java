@@ -5,11 +5,11 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class HariZerbitzaria extends Thread {
-    BufferedReader sarrera;
-    PrintWriter irteera;
-    Socket socket = null;
+    private BufferedReader sarrera;
+    private PrintWriter irteera;
+    private Socket socket;
 
-    int hariZenbakia = -1;
+    private int hariZenbakia;
 
     public HariZerbitzaria(int hariZenbakia, Socket socket) {
         this.hariZenbakia = hariZenbakia;
@@ -18,7 +18,7 @@ public class HariZerbitzaria extends Thread {
         try {
             // Sarrera irteera fluxuak sortu
             sarrera = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-            irteera = new PrintWriter(this.socket.getOutputStream());
+            irteera = new PrintWriter(this.socket.getOutputStream(), true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -26,22 +26,66 @@ public class HariZerbitzaria extends Thread {
 
     public void run() {
         try {
-            String jasotakoTestua = "";
-            String bidaltzekoTestua = "";
-            System.out.println("HariZerbitzaria (" + this.hariZenbakia + ") bezeroarekin komunikatzen: " + this.socket.toString());
-            
-            System.out.println("1. Nola berrezarri nire kontu-pasahitza?");
-            System.out.println("2. Nola konektatu nire gailua Wi-Fi sare batera?");
-            System.out.println("3. Nola konpondu nire inprimagailuko inprimatze-arazoak?");
-            System.out.println("4. Zein urrats eman behar ditut nire sistema eragilearen softwarea eguneratzeko?");
-            System.out.println("5. Nola kopia ditzaket nire fitxategi garrantzitsuak?");
-            System.out.println("0. Irten");
-            System.out.print("Sartu aukera bat: ");
-			irteera.close();
-			sarrera.close();
-			this.socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+            String jasotakoTestua;
+            System.out.println(
+                    "HariZerbitzaria (" + this.hariZenbakia + ") bezeroarekin komunikatzen: " + this.socket.toString());
+
+            boolean jarraitu = true;
+            while (jarraitu) {
+                // Bezeroari menua bidali
+                irteera.println("Menua:");
+                irteera.println("1. Nola berrezarri nire kontu-pasahitza?");
+                irteera.println("2. Nola konektatu nire gailua Wi-Fi sare batera?");
+                irteera.println("3. Nola konpondu nire inprimagailuko inprimatze-arazoak?");
+                irteera.println("4. Zein urrats eman behar ditut nire sistema eragilearen softwarea eguneratzeko?");
+                irteera.println("5. Nola kopia ditzaket nire fitxategi garrantzitsuak?");
+                irteera.println("0. Irten");
+                irteera.println("Sartu aukera bat:");
+
+                // Bezeroaren aukera irakurri
+                jasotakoTestua = sarrera.readLine();
+                if (jasotakoTestua.equals(null)) {
+                    break;
+                }
+
+                switch (jasotakoTestua) {
+                    case "1":
+                        irteera.println(
+                                "Kontu-pasahitza berrezartzeko: Sartu zure kontuaren konfigurazioan eta jarraitu argibideak.");
+                        break;
+                    case "2":
+                        irteera.println(
+                                "Wi-Fi konektatzeko: Joan gailuaren konfiguraziora, aukeratu sareak eta konektatu zure sarera.");
+                        break;
+                    case "3":
+                        irteera.println(
+                                "Inprimatze-arazoak konpontzeko: Egiaztatu tinta eta papera, eta berrabiarazi inprimagailua.");
+                        break;
+                    case "4":
+                        irteera.println(
+                                "Softwarea eguneratzeko: Joan sistema eragilearen eguneratze ataletara eta jarraitu argibideak.");
+                        break;
+                    case "5":
+                        irteera.println(
+                                "Fitxategiak kopiatzeko: Erabili USB edo hodei-zerbitzuak fitxategiak segurtasunez gordetzeko.");
+                        break;
+                    case "0":
+                        irteera.println("Eskerrik asko erabiltzeagatik! Agur.");
+                        jarraitu = false;
+                        break;
+                    default:
+                        irteera.println("Aukera okerra. Saiatu berriro.");
+                        break;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                System.out.println("Errorea socket-a ixtean: " + e.getMessage());
+            }
+        }
     }
 }

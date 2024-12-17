@@ -13,17 +13,7 @@ public class BezeroaTCP {
         int portua = 12345;
 
         System.out.println("Bezeroa martxan...");
-        Scanner scanner = new Scanner(System.in);
-        int aukera = 0;
-        
-        switch (aukera) {
-            case 1:
-                
-                break;
-        
-            default:
-                break;
-        }
+
         try (Socket bezeroa = new Socket(helbidea, portua)) {
 
             // Bezeroaren irteera fluxua zerbitzariari mezuak bidaltzeko
@@ -33,6 +23,32 @@ public class BezeroaTCP {
             // Bezeroaren sarrera fluxua zerbitzaritik mezuak irakurtzeko
             InputStream in = bezeroa.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+            try (Scanner scanner = new Scanner(System.in)) {
+                boolean jarraitu = true;
+
+                while (jarraitu) {
+                    // Zerbitzaritik menua irakurri eta erakutsi
+                    String serverResponse;
+                    while (!(serverResponse = reader.readLine()).equals("Sartu aukera bat:")) {
+                        System.out.println(serverResponse);
+                    }
+                    System.out.print("Sartu aukera bat: ");
+
+                    // Zerbitzariari bezeroaren aukera bidali
+                    String aukera = scanner.nextLine();
+                    printOut.println(aukera);
+
+                    // Zerbitzariaren erantzuna erakutsi
+                    String erantzuna = reader.readLine();
+                    System.out.println("Zerbitzaria: " + erantzuna);
+
+                    // 0 baldin bada aplikazioatik irten eta bukatu
+                    if ("0".equals(aukera)) {
+                        jarraitu = false;
+                    }
+                }
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
