@@ -1,3 +1,5 @@
+package paagbi;
+
 import org.apache.commons.net.ftp.FTPClient;
 
 public class FTPKonektatu {
