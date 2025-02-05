@@ -4,6 +4,8 @@
  */
 package azterketamaiderarizmendiarrieta;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -11,32 +13,34 @@ import java.util.Random;
  */
 public class Pultsularia extends Thread {
     // Aldagaiak
-    private String izena;
+    //private String izenaP1;
+    //private String izenaP2;
+    private int counterP1;
+    private int counterP2;
     private final Random random = new Random(); // Tira egitea ausaz egiteko
-    
-    // Eraikitzailea
-    public Pultsularia(String izena) {
-        this.izena = izena;
-    }
-    
-    // Getter & Setter-ak
-    public String getIzena() {
-        return izena;
-    }
-    
-    public void setIzena(String izena) {
-        this.izena = izena;
-    }
-    
+
     @Override
     public void run() {
-        // [0,4] bitarteko indarra -> gero hari p1-aren ausazko tira zenb hartu
+        while(counterP1!=20 && counterP2!=-20) {
+            // [0,4] bitarteko indarra -> gero hari p1-aren ausazko tira zenb hartu
+            int tira = 0;
+            while (tira == 0) {
+                tira = random.nextInt(-4,5); // tira egiteko indarra ausaz izateko, -4 eta 4 bitarteko indarra
+            }
+
+            if (tira > 0) {
+                System.out.println(">>>>>>>>>>>>>>>TIRA ALICEK");
+                this.counterP1 += tira;
+            } else {
+                System.out.println("TIRA BOBEK<<<<<<<<<<<<<<<");
+                this.counterP2 -= Math.abs(tira);
+            }
+        }
         
-        int tira = random.nextInt(-4,5); // tira egiteko indarra ausaz izateko, -4 eta 4 bitarteko indarra
-        if (tira > 0) {
-            System.out.println(">>>>>>>>>>>>>>>TIRA ALICEK");
+        if (counterP1==20) {
+            System.out.println("HA GANADO DERECHA");
         } else {
-            System.out.println("TIRA BOBEK<<<<<<<<<<<<<<<");
+            System.out.println("HA GANADO IZQUIERDA");
         }
     }
 }

@@ -12,7 +12,6 @@ import java.util.concurrent.Semaphore;
  * @author maider
  */
 public class Txapelketa {
-    private Pultsularia pultsularia;
     private int counter;
     private final Semaphore semaforoa = new Semaphore(2);
     
@@ -20,19 +19,20 @@ public class Txapelketa {
         
     }
     
-    public void tiraEgin(int tira) {
+    public void tiraEgin() {
         try {
             semaforoa.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         while(counter!=20 || counter!=-20) {
+            
             if (counter == 20) {
                 System.out.println("Marka 20cm");
-                System.out.println(pultsularia.getIzena() + ": ni naiz txapelduna!");
+                //System.out.println(pultsularia.getIzena() + ": ni naiz txapelduna!");
             } else {
                 System.out.println("Marka 20cm");
-                System.out.println(pultsularia.getIzena() + ": ni naiz txapelduna!");
+                //System.out.println(pultsularia.getIzena() + ": ni naiz txapelduna!");
             }
         }
     }

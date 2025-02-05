@@ -14,11 +14,9 @@ public class AzterketaMaiderArizmendiarrieta {
      */
     public static void main(String[] args) {
         // Hariak sortu
-        Pultsularia p1 = new Pultsularia("Bob");
-        Pultsularia p2 = new Pultsularia("Alice");
+        Pultsularia torneo = new Pultsularia();
         
         // Hariak jaurti
-        p1.start();
-        p2.start();
+        torneo.start();
     }
 }
