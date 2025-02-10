@@ -10,11 +10,16 @@ package pkg03;
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public static void main(String[] args) throws InterruptedException {
+        //for (int ronda = 1; ronda <= 3; ronda++) {
+            KarreraC karrera = new KarreraC();
+            for (int c = 1; c <= 8; c++) {
+                KorrikalariaC k = new KorrikalariaC(c, karrera);
+                k.start();
+            }
+        //}
+
+        System.out.println("\n--- Karrera amaitu da ---");
     }
     
 }

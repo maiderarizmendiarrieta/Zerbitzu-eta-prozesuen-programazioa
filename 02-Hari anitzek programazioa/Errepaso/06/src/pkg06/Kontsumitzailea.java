@@ -23,7 +23,7 @@ public class Kontsumitzailea extends Thread {
             try {
                 System.out.println("Kontsumitzailea itxaroten...");
                 int elementua = ilara.kontsumitu();
-                System.out.println("Kontsumitzailea " + elementua + " elementua kontsumitu du.");
+                //System.out.println("Kontsumitzailea " + elementua + " elementua kontsumitu du.");
                 int n = random.nextInt(1000,5001);
                 Thread.sleep(n);
             } catch (InterruptedException ex) {
